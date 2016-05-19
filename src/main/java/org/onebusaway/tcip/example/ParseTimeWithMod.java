@@ -8,6 +8,7 @@ import org.supercsv.exception.SuperCsvCellProcessorException;
 import org.supercsv.util.CsvContext;
 
 public class ParseTimeWithMod extends CellProcessorAdaptor {
+	
 	public ParseTimeWithMod(){
 		super();
 	}
@@ -23,19 +24,20 @@ public class ParseTimeWithMod extends CellProcessorAdaptor {
         String str = value.toString();
         
 		String[] parts= str.split(":");
-		String modifier= parts[1].split("[A-Z]")[1];
+		char modifier= str.charAt(str.length() - 1);
 		int hour = Integer.parseInt(parts[0]);
-		int minute = Integer.parseInt(parts[1]); 
+		parts[1]=parts[1].replaceAll(modifier+"", "");
+		int minute = Integer.parseInt(parts[1].replaceAll(modifier+"", "")); 
 		
 		DateTime time = new DateTime();
 		time.withHourOfDay(hour);
 		time.withMinuteOfHour(minute);
         
-		if (modifier ==String.valueOf("B")){
+		if (modifier =='B'){
 			time.minusDays(1);
 		}
 		
-		if (modifier ==String.valueOf("X")){
+		if (modifier == 'X'){
 			time.plusDays(1);
 		}
 		

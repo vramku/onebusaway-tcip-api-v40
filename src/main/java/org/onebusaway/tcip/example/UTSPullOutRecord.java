@@ -2,23 +2,51 @@ package example;
 
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
-import org.joda.time.LocalDateTime;
 import org.joda.time.LocalTime;
+import org.supercsv.cellprocessor.Optional;
+import org.supercsv.cellprocessor.constraint.NotNull;
+import org.supercsv.cellprocessor.ift.CellProcessor;
+import org.supercsv.cellprocessor.joda.ParseLocalDate;
+
+import config.TimeManipulation;
 
 public class UTSPullOutRecord {
 	String route;
 	String depot;
 	String runnumber;
 	LocalDate date;
-	LocalDateTime schedpo;
-	LocalDateTime actualpo;
-	LocalDateTime schedpi;
-	LocalDateTime actualpi;
+	String schedpo;
+	String actualpo;
+	String schedpi;
+	String actualpi;
 	String busnumber;
 	double busmileage;
 	String pass;
 	String authid;
+	DateTime zeroDate;
+	TimeManipulation Clock = new TimeManipulation();
 	
+	public UTSPullOutRecord(){
+		
+	}
+	
+	protected CellProcessor[] getProcessors() {
+		final CellProcessor[] processors = new CellProcessor[] { 
+				new NotNull(),
+				new NotNull(),
+				new NotNull(),
+				new ParseLocalDate(),
+				new NotNull(),
+				new Optional(),
+				new NotNull(),
+				new Optional(),
+				new Optional(),
+				new NotNull(),
+				new Optional(),
+				new NotNull(),
+		};
+		return processors;
+	}
 	public String getRoute() {
 		return route;
 	}
@@ -45,7 +73,8 @@ public class UTSPullOutRecord {
 
 
 	public void setRunnumber(String runnumber) {
-		this.runnumber = runnumber;
+		// remove leading zero
+		this.runnumber = runnumber.replaceFirst("^0+(?!$)", "");;
 	}
 
 
@@ -59,66 +88,48 @@ public class UTSPullOutRecord {
 	}
 
 
-	public LocalTime getSchedpo() {
-		return schedpo;
+	public DateTime getSchedpo() {
+		return Clock.EventDateTime(date,schedpo);
 	}
 
 
 	public void setSchedpo(String intime) {
-
-		
-		this.schedpo = time;
+		this.schedpo = intime;
 	}
 
 
-	public LocalTime getActualpo() {
-		return actualpo;
+	public DateTime getActualpo() {
+		if(actualpo.isEmpty())
+			return zeroDate;
+		else
+		return Clock.EventDateTime(this.date, actualpo);
 	}
 
 
 	public void setActualpo(String intime) {
-		String[] parts= intime.split(":");
-		String modifier= parts[1].split("[A-Z]")[1];
-		int hour = Integer.parseInt(parts[0]);
-		int minute = Integer.parseInt(parts[1]); 
-		
-		LocalTime time = new LocalTime(hour, minute);
-		
-		this.actualpo = time;
+		this.actualpo = intime;
 	}
 
 
-	public LocalTime getSchedpi() {
-		return schedpi;
+	public DateTime getSchedpi() {
+		return Clock.EventDateTime(this.date,schedpi);
 	}
 
 
 	public void setSchedpi(String intime) {
-		String[] parts= intime.split(":");
-		String modifier= parts[1].split("[A-Z]")[1];
-		int hour = Integer.parseInt(parts[0]);
-		int minute = Integer.parseInt(parts[1]); 
 		
-		LocalTime time = new LocalTime(hour, minute);
-		
-		this.schedpi = time;
+		this.schedpi  = intime;
 	}
 
 
-	public LocalTime getActualpi() {
-		return actualpi;
+	public DateTime getActualpi() {
+			return Clock.EventDateTime(this.date,actualpi);
 	}
 
 
 	public void setActualpi(String intime) {
-		String[] parts= intime.split(":");
-		String modifier= parts[1].split("[A-Z]")[1];
-		int hour = Integer.parseInt(parts[0]);
-		int minute = Integer.parseInt(parts[1]); 
 		
-		LocalTime time = new LocalTime(hour, minute);
-		
-		this.actualpi = time;
+		this.actualpi  = intime;
 	}
 
 
@@ -137,8 +148,8 @@ public class UTSPullOutRecord {
 	}
 
 
-	public void setBusmileage(double busmileage) {
-		this.busmileage = busmileage;
+	public void setBusmileage(String busmileage) {
+		this.busmileage = Double.parseDouble(busmileage);
 	}
 
 
@@ -158,16 +169,12 @@ public class UTSPullOutRecord {
 
 
 	public void setAuthid(String authid) {
-		this.authid = authid;
+		if(authid.equals("TA") || authid.equals("OA") )
+			this.authid = "MTA NYCT";
+		else if(authid.equals("RB"))
+			this.authid = "MTABC";
+		else	
+			this.authid = authid;
 	}
-
-
-
-	
-
-	public UTSPullOutRecord(){
-		
-	}
-	
 
 }

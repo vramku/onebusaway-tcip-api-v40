@@ -24,7 +24,7 @@
 			<xs:element name="toSide" type="Side" minOccurs="0"/>
 			<xs:element name="fromHeight" type="Height" minOccurs="0"/>
 			<xs:element name="toHeight" type="Height" minOccurs="0"/>
-			<xs:element name="fromAdminAreas" type="AdminAreaGroup" minOccurs="0"/>
+			<xs:element name="fromAdminAreas" type="AdminAreaGroup" m inOccurs="0"/>
 			<xs:element name="toAdminAreas" type="AdminAreaGroup" minOccurs="0"/>
 		</xs:sequence>
 	</xs:complexType>

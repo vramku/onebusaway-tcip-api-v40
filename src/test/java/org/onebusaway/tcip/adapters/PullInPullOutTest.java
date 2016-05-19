@@ -203,12 +203,11 @@ public class PullInPullOutTest {
 		pullOutsList.setCreated(beginDateTime);
 		pullOutsList.setSchVersion("TCIP 4.0");
 		pullOutsList.setSourceapp("YardBoss");
-    pullOutsList.setErrorCode("1");
-    pullOutsList.setErrorDescription("Sample error description");
-		pullOutsList
-				.setNoNameSpaceSchemaLocation("http://www.aptatcip.com/APTA-TCIP-S-01%204.0_files/Schema%20Set.zip");
+		pullOutsList.setErrorCode("1");
+		pullOutsList.setErrorDescription("Sample error description");
+		pullOutsList.setNoNameSpaceSchemaLocation("http://www.aptatcip.com/APTA-TCIP-S-01%204.0_files/Schema%20Set.zip");
 		pullOutsList.setDeactivation(deactivationTime);
-
+		
 		return pullOutsList;
 	}
 }
